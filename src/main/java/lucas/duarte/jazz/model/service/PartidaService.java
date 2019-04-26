@@ -37,4 +37,39 @@ public class PartidaService {
 		return partidaRepo.findPartidasEmAndamento();
 	}
 
+	public boolean iniciarPartida(Long id) {
+		// Partida antes da alteracao
+		Partida partidaOld = partidaRepo.findById(id).orElse(null);
+		if (partidaOld != null) {
+			if (partidaOld.isPartidaIniciada()) {
+				return false;
+			} else {
+				partidaOld.setPartidaIniciada(true);
+				partidaRepo.save(partidaOld);
+				return true;
+			}
+		} else {
+			System.out.println("Partida nao existente");
+			return false;
+		}
+
+	}
+	
+	public boolean finalizarPartida(Long id) {
+		// Partida antes da alteracao
+		Partida partidaOld = partidaRepo.findById(id).orElse(null);
+		if (partidaOld != null) {
+			if (partidaOld.isPartidaFinalizada()) {
+				return false;
+			} else {
+				partidaOld.setPartidaFinalizada(true);
+				partidaRepo.save(partidaOld);
+				return true;
+			}
+		} else {
+			System.out.println("Partida nao existente");
+			return false;
+		}
+
+	}
 }

@@ -38,15 +38,7 @@ public class CampeonatoService {
 
 	}
 	
-	public ResponseEntity<List<Object[]>> getAllCampeonatosNameId() {
-		List<Object[]> campeonatos = (campeonatoRepo.findAllByNameAndId());
-		
-		if (campeonatos.isEmpty()) {
-			// Return 404 beacause was not found
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}else {
-			return new ResponseEntity<List<Object[]>>(campeonatos, HttpStatus.OK);
-		}
-
+	public List<Campeonato> getAllCampeonatosNameId() {
+		return campeonatoRepo.findAllByNameAndId();
 	}
 }

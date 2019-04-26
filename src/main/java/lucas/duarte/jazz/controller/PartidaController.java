@@ -43,7 +43,8 @@ public class PartidaController {
 	@RequestMapping(value = "/partidas/", method = RequestMethod.POST)
 	public ResponseEntity<?> createPartida(@RequestBody Partida partida, UriComponentsBuilder ucBuilder) {
 		if (partidaServ.cadastrarPartida(partida)) {
-			return new ResponseEntity<Partida>(partida, HttpStatus.CREATED);
+			return responseController.responseController(partida, HttpStatus.OK);
+			// return new ResponseEntity<Partida>(partida, HttpStatus.CREATED);
 		} else {
 			return exceptController.errorHandling("Erro no cadastro de partidas", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -55,11 +56,11 @@ public class PartidaController {
 		if (partida == null) {
 			return exceptController.errorHandling("Nao existe essa partida", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Partida>(partida, HttpStatus.OK);
+		return responseController.responseController(partida, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/partidas/andamento/", method = RequestMethod.GET)
-	public ResponseEntity<Object> getPartidasEmAndamento() {
+	public ResponseEntity<?> getPartidasEmAndamento() {
 
 		List<Partida> partidasAndamento = partidaServ.getPartidaEmAndamento();
 
@@ -81,7 +82,43 @@ public class PartidaController {
 			partidas.add(objectNode1);
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body(partidas);
+		return responseController.responseController(partidas, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/partidas/iniciar/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> iniciarPartida(@PathVariable("id") long id) {
+
+		boolean p = partidaServ.iniciarPartida(id);
+
+		if (!p) {
+			return exceptController.errorHandling("Partida ja iniciada ou inexistente", HttpStatus.BAD_REQUEST);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode objectNode1 = mapper.createObjectNode();
+		
+		objectNode1.put("id", id);
+		objectNode1.put("iniciada", p);
+		
+		return responseController.responseController(objectNode1, HttpStatus.OK);
+
+	}
+	
+	@RequestMapping(value = "/partidas/finalizar/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> finalizarPartida(@PathVariable("id") long id) {
+
+		boolean p = partidaServ.finalizarPartida(id);
+
+		if (!p) {
+			return exceptController.errorHandling("Partida ja finalizada ou inexistente", HttpStatus.BAD_REQUEST);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode objectNode1 = mapper.createObjectNode();
+		
+		objectNode1.put("id", id);
+		objectNode1.put("finalizada", p);
+		
+		return responseController.responseController(objectNode1, HttpStatus.OK);
+
+	}
+	
 }
