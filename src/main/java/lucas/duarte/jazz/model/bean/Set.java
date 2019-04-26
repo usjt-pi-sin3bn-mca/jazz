@@ -109,4 +109,10 @@ public class Set implements Serializable {
 		this.partida = partida;
 	}
 
+	public String toString() {
+		return "Set [id=" + id + ", pontoA=" + pontoA + ", pontoB=" + pontoB + ", tempoA=" + tempoA + ", tempoB="
+				+ tempoB + ", ganhador=" + ganhador + ", setFinalizado=" + setFinalizado + ", partida=" + partida + "]";
+	}
+	
+
 }

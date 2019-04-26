@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import lucas.duarte.jazz.model.bean.Partida;
 import lucas.duarte.jazz.model.service.PartidaService;
 
@@ -20,34 +24,101 @@ import lucas.duarte.jazz.model.service.PartidaService;
 public class PartidaController {
 	@Autowired
 	private PartidaService partidaServ;
+	@Autowired
+	private ExceptionController exceptController;
+	@Autowired
+	private REController responseController;
 
-	// Get all partidas
 	@RequestMapping(value = "/partidas/", method = RequestMethod.GET)
-	public ResponseEntity<List<Partida>> listAllpartidas() {
-		return partidaServ.getAllPartidas();
+	public ResponseEntity<?> listAllpartidas() {
+		List<Partida> partidas = partidaServ.getAllPartidas();
+
+		if (partidas.isEmpty()) {
+			return exceptController.errorHandling("Nao existem partidas cadastradas", HttpStatus.NOT_FOUND);
+		}
+
+		return responseController.responseController(partidas, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/partidas/", method = RequestMethod.POST)
 	public ResponseEntity<?> createPartida(@RequestBody Partida partida, UriComponentsBuilder ucBuilder) {
-		System.out.println("Vou cadastrar uma partida");
-		// Validar se partida Ja Existe
-		partidaServ.cadastrarPartida(partida);
-		return new ResponseEntity<Partida>(partida, HttpStatus.CREATED);
-
+		if (partidaServ.cadastrarPartida(partida)) {
+			return responseController.responseController(partida, HttpStatus.OK);
+			// return new ResponseEntity<Partida>(partida, HttpStatus.CREATED);
+		} else {
+			return exceptController.errorHandling("Erro no cadastro de partidas", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@RequestMapping(value = "/partidas/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getPartida(@PathVariable("id") long id) {
-		// Retorna objeto ja instanciado
 		Partida partida = partidaServ.getpartidaById(id);
-		// Nao achou a partida
 		if (partida == null) {
-			// Nao achou nenhuma partida relacionada
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return exceptController.errorHandling("Nao existe essa partida", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Partida>(partida, HttpStatus.OK);
+		return responseController.responseController(partida, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/partidas/andamento/", method = RequestMethod.GET)
+	public ResponseEntity<?> getPartidasEmAndamento() {
+
+		List<Partida> partidasAndamento = partidaServ.getPartidaEmAndamento();
+
+		if (partidasAndamento.isEmpty()) {
+			return exceptController.errorHandling("Nao existem partidas em andamento", HttpStatus.NOT_FOUND);
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode partidas = mapper.createArrayNode();
+
+		for (Partida p : partidasAndamento) {
+
+			ObjectNode objectNode1 = mapper.createObjectNode();
+			objectNode1.put("id", p.getId());
+			objectNode1.put("timeA", p.getTimeA());
+			objectNode1.put("timeB", p.getTimeB());
+			objectNode1.put("descricao", p.getDescricao());
+
+			partidas.add(objectNode1);
+		}
+
+		return responseController.responseController(partidas, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/partidas/iniciar/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> iniciarPartida(@PathVariable("id") long id) {
+
+		boolean p = partidaServ.iniciarPartida(id);
+
+		if (!p) {
+			return exceptController.errorHandling("Partida ja iniciada ou inexistente", HttpStatus.BAD_REQUEST);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode objectNode1 = mapper.createObjectNode();
+		
+		objectNode1.put("id", id);
+		objectNode1.put("iniciada", p);
+		
+		return responseController.responseController(objectNode1, HttpStatus.OK);
+
 	}
 	
-	
+	@RequestMapping(value = "/partidas/finalizar/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> finalizarPartida(@PathVariable("id") long id) {
+
+		boolean p = partidaServ.finalizarPartida(id);
+
+		if (!p) {
+			return exceptController.errorHandling("Partida ja finalizada ou inexistente", HttpStatus.BAD_REQUEST);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode objectNode1 = mapper.createObjectNode();
+		
+		objectNode1.put("id", id);
+		objectNode1.put("finalizada", p);
+		
+		return responseController.responseController(objectNode1, HttpStatus.OK);
+
+	}
 	
 }

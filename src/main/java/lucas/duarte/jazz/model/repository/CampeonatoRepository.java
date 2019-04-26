@@ -13,6 +13,6 @@ public interface CampeonatoRepository extends JpaRepository<Campeonato, Long>{
 	
 	public static final String FIND_PROJECTS = "SELECT id, nome from campeonato";
 	@Query(value = FIND_PROJECTS, nativeQuery = true)
-    public List<Object[]> findAllByNameAndId();
+    public List<Campeonato> findAllByNameAndId();
 	
 }

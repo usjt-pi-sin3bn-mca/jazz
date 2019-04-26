@@ -29,6 +29,7 @@ public class SetService {
 
 	public ResponseEntity<Set> updateSet(Set set, long id) {
 		Set meuSet = setRepo.findById(id).orElse(null);
+		//printando o Set para verificar os atributos
 		if (meuSet != null) {
 			if (set.getPontoA() != 0) {
 				meuSet.setPontoA(set.getPontoA());
@@ -41,7 +42,7 @@ public class SetService {
 				setRepo.save(meuSet);
 			} else if (set.getTempoB() != 0) {
 				meuSet.setPontoB(set.getTempoB());
-				setRepo.save(meuSet);	
+				setRepo.save(meuSet);
 			} else if (set.getGanhador() != null) {
 				meuSet.setGanhador(set.getGanhador());
 				setRepo.save(meuSet);
@@ -54,12 +55,12 @@ public class SetService {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	public ResponseEntity<List<Set>> getSetsOfPartida(long partidaId){
+
+	public ResponseEntity<List<Set>> getSetsOfPartida(long partidaId) {
 		List<Set> meuSets = setRepo.findOneByPartida(partidaId);
 		if (meuSets.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}else {
+		} else {
 			return new ResponseEntity<List<Set>>(meuSets, HttpStatus.OK);
 		}
 	}
