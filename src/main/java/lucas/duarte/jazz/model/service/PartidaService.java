@@ -13,10 +13,14 @@ public class PartidaService {
 	@Autowired
 	private PartidaRepository partidaRepo;
 
-	public void cadastrarPartida(Partida partida) {
-		// Mocar Sao judas como time A
-		partida.setTimeA("Sao Judas");
-		partidaRepo.save(partida);
+	public boolean cadastrarPartida(Partida partida) {
+		try {
+			partidaRepo.save(partida);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
 	}
 
 	public Partida getpartidaById(Long id) {

@@ -26,6 +26,8 @@ public class PartidaController {
 	private PartidaService partidaServ;
 	@Autowired
 	private ExceptionController exceptController;
+	@Autowired
+	private REController responseController;
 
 	@RequestMapping(value = "/partidas/", method = RequestMethod.GET)
 	public ResponseEntity<?> listAllpartidas() {
@@ -35,25 +37,23 @@ public class PartidaController {
 			return exceptController.errorHandling("Nao existem partidas cadastradas", HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<Object>(partidas, HttpStatus.OK);
+		return responseController.responseController(partidas, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/partidas/", method = RequestMethod.POST)
 	public ResponseEntity<?> createPartida(@RequestBody Partida partida, UriComponentsBuilder ucBuilder) {
-		try {
-			partidaServ.cadastrarPartida(partida);
-		} catch (Exception e) {
-			return exceptController.errorHandling("Erro ao cadastrar partida", HttpStatus.BAD_REQUEST);
+		if (partidaServ.cadastrarPartida(partida)) {
+			return new ResponseEntity<Partida>(partida, HttpStatus.CREATED);
+		} else {
+			return exceptController.errorHandling("Erro no cadastro de partidas", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Partida>(partida, HttpStatus.CREATED);
-
 	}
 
 	@RequestMapping(value = "/partidas/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getPartida(@PathVariable("id") long id) {
 		Partida partida = partidaServ.getpartidaById(id);
 		if (partida == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return exceptController.errorHandling("Nao existe essa partida", HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Partida>(partida, HttpStatus.OK);
 	}
