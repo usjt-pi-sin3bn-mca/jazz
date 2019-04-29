@@ -1,11 +1,8 @@
 package lucas.duarte.jazz.model.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lucas.duarte.jazz.model.bean.Set;
@@ -16,20 +13,20 @@ public class SetService {
 	@Autowired
 	private SetRepository setRepo;
 
-	// Criar novo set
-	public ResponseEntity<Set> salvarSet(Set set) {
-		try {
-			setRepo.save(set);
-			return new ResponseEntity<Set>(set, HttpStatus.OK);
-		} catch (Exception e) {
-			System.out.println(e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-		} // TODO: handle exception
+	public boolean salvarSet(Set set) {
+		List<Set> listaSets = setRepo.findOneByPartida(set.getPartida().getId());
+
+		if (listaSets.size() >= 5) {
+			return false;
+		}
+
+		setRepo.save(set);
+		return true;
 	}
 
-	public ResponseEntity<Set> updateSet(Set set, long id) {
+	public Set updateSet(Set set, long id) {
 		Set meuSet = setRepo.findById(id).orElse(null);
-		//printando o Set para verificar os atributos
+		System.out.println(set.isSetFinalizado());
 		if (meuSet != null) {
 			if (set.getPontoA() != 0) {
 				meuSet.setPontoA(set.getPontoA());
@@ -43,25 +40,22 @@ public class SetService {
 			} else if (set.getTempoB() != 0) {
 				meuSet.setPontoB(set.getTempoB());
 				setRepo.save(meuSet);
-			} else if (set.getGanhador() != null) {
+			} else if (set.getGanhador() != "") {
+				//TODO: Implementar logica de Time A e Time B baseado nas letras define qual time ganhou
 				meuSet.setGanhador(set.getGanhador());
 				setRepo.save(meuSet);
 			} else if (set.isSetFinalizado()) {
 				meuSet.setSetFinalizado(set.isSetFinalizado());
 				setRepo.save(meuSet);
 			}
-			return new ResponseEntity<Set>(meuSet, HttpStatus.OK);
+			return meuSet;
 		} else {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return null;
 		}
 	}
+	
+	public List<Set> getSetsOfPartida(long partidaId) {
+		return setRepo.findOneByPartida(partidaId);
 
-	public ResponseEntity<List<Set>> getSetsOfPartida(long partidaId) {
-		List<Set> meuSets = setRepo.findOneByPartida(partidaId);
-		if (meuSets.isEmpty()) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		} else {
-			return new ResponseEntity<List<Set>>(meuSets, HttpStatus.OK);
-		}
 	}
 }

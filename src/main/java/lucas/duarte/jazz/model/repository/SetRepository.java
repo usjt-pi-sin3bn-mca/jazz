@@ -15,5 +15,6 @@ public interface SetRepository extends JpaRepository<Set, Long> {
 	public static final String FIND_SETS_PARTIDA = "SELECT * from meu_set where partida_id = :id";
 	@Query(value = FIND_SETS_PARTIDA, nativeQuery = true)
 	public List<Set> findOneByPartida(@Param("id") long partidaId);
+	
 
 }
