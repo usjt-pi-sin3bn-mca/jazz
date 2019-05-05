@@ -95,14 +95,14 @@ public class PartidaController {
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode objectNode1 = mapper.createObjectNode();
-		
+
 		objectNode1.put("id", id);
 		objectNode1.put("iniciada", p);
-		
+
 		return responseController.responseController(objectNode1, HttpStatus.OK);
 
 	}
-	
+
 	@RequestMapping(value = "/partidas/finalizar/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> finalizarPartida(@PathVariable("id") long id) {
 
@@ -113,12 +113,38 @@ public class PartidaController {
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode objectNode1 = mapper.createObjectNode();
-		
+
 		objectNode1.put("id", id);
 		objectNode1.put("finalizada", p);
-		
+
 		return responseController.responseController(objectNode1, HttpStatus.OK);
 
 	}
+
+	// Get Partidas Anteriores
+	@RequestMapping(value = "/partidasAnteriores/", method = RequestMethod.GET)
+	public ResponseEntity<?> listaPartidasAnteriores() {
+		List<Partida> partidasAnteriores = partidaServ.getPartidasAnteriores();
+
+		if (partidasAnteriores.isEmpty()) {
+			return exceptController.errorHandling("Nao existem partidas anteriores", HttpStatus.NOT_FOUND);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode partidas = mapper.createArrayNode();
+
+		for (Partida p : partidasAnteriores) {
+
+			ObjectNode objectNode1 = mapper.createObjectNode();
+			objectNode1.put("id", p.getId());
+			objectNode1.put("timeA", p.getTimeA());
+			objectNode1.put("timeB", p.getTimeB());
+			objectNode1.put("descricao", p.getDescricao());
+
+			partidas.add(objectNode1);
+		}
+
+		return responseController.responseController(partidas, HttpStatus.OK);
+	}
+
 	
 }

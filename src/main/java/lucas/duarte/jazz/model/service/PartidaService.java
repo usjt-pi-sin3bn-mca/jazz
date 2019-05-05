@@ -3,6 +3,8 @@ package lucas.duarte.jazz.model.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lucas.duarte.jazz.model.bean.Partida;
@@ -72,4 +74,13 @@ public class PartidaService {
 		}
 
 	}
+	//Retorna as partidas anteriores
+	
+	
+	public List<Partida> getPartidasAnteriores() {
+		
+		return  partidaRepo.getAnteriores();
+	}
+	
+	
 }
