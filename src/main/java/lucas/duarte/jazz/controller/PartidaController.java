@@ -121,7 +121,7 @@ public class PartidaController {
 
 	}
 
-	// Get Partidas Anteriores
+	//Retorna as Partidas Anteriores
 	@RequestMapping(value = "/partidasAnteriores/", method = RequestMethod.GET)
 	public ResponseEntity<?> listaPartidasAnteriores() {
 		List<Partida> partidasAnteriores = partidaServ.getPartidasAnteriores();
