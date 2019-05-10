@@ -75,8 +75,6 @@ public class PartidaService {
 
 	}
 	//Retorna as partidas anteriores
-	
-	
 	public List<Partida> getPartidasAnteriores() {
 		
 		return  partidaRepo.getAnteriores();

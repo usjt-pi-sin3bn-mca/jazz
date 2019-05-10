@@ -121,7 +121,7 @@ public class PartidaController {
 
 	}
 
-	//Retorna as  Partidas Anteriores
+	// Retorna as Partidas Anteriores
 	@RequestMapping(value = "/partidasAnteriores/", method = RequestMethod.GET)
 	public ResponseEntity<?> listaPartidasAnteriores() {
 		List<Partida> partidasAnteriores = partidaServ.getPartidasAnteriores();
@@ -138,7 +138,9 @@ public class PartidaController {
 			objectNode1.put("id", p.getId());
 			objectNode1.put("timeA", p.getTimeA());
 			objectNode1.put("timeB", p.getTimeB());
-			objectNode1.put("descricao", p.getDescricao());
+			objectNode1.put("data", p.getData().toString());
+			
+			objectNode1.put("ganhador", p.getGanhadorPartida());
 
 			partidas.add(objectNode1);
 		}
@@ -146,5 +148,4 @@ public class PartidaController {
 		return responseController.responseController(partidas, HttpStatus.OK);
 	}
 
-	
 }
