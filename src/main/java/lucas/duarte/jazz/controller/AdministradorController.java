@@ -48,7 +48,7 @@ public class AdministradorController {
 	}
 	
 	//Verifica se o admin existe na base
-	@RequestMapping(value = "/loginAdmin/", method = RequestMethod.POST, produces ="application/json")
+	@RequestMapping(value = "/login/", method = RequestMethod.POST, produces ="application/json")
 	public ResponseEntity<?> loginAdmin(@RequestBody Administrador adm, UriComponentsBuilder ucBuilder) {
 		return administradorService.loginAdmin(adm);
 	}

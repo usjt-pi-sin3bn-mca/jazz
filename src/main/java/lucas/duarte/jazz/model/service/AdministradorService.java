@@ -80,9 +80,7 @@ public class AdministradorService {
 		//Do tipo Administrador para poder retornar o Objeto
 		Administrador admExistente = administradorRepository.findByEmailandSenha(adm.getEmail(), adm.getSenha());
 		if (admExistente != null) {
-			//propriedade para adicionar valor booleano ao admin
-			//desta forma é possivel retornar o objeto  juntamente como parametro boolean
-			admExistente.setAdmin(true);
+			
 			return new ResponseEntity<Administrador>(admExistente, HttpStatus.OK);
 
 		} else {

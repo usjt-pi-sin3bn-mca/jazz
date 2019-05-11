@@ -33,16 +33,7 @@ public class Administrador implements Serializable {
 	private String senha;
 	@Column(nullable = false, length = 200)
 
-	@JsonProperty("admin")
-	private Boolean admin;
-
-	public Boolean getAdmin() {
-		return admin;
-	}
-
-	public void setAdmin(Boolean admin) {
-		this.admin = admin;
-	}
+	
 
 	public long getId() {
 		return id;
