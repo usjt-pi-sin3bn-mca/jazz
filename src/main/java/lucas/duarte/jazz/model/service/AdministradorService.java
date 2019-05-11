@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import lucas.duarte.jazz.controller.ExceptionController;
 import lucas.duarte.jazz.model.bean.Administrador;
 import lucas.duarte.jazz.model.repository.AdministradorRepository;
 
@@ -14,6 +15,8 @@ import lucas.duarte.jazz.model.repository.AdministradorRepository;
 public class AdministradorService {
 	@Autowired
 	private AdministradorRepository administradorRepository;
+	@Autowired
+	private ExceptionController exceptController;
 
 	public ResponseEntity<Administrador> cadastrarAdministrador(Administrador adm) {
 		try {
@@ -70,6 +73,21 @@ public class AdministradorService {
 			return new ResponseEntity<Administrador>(admUpdate, HttpStatus.OK);
 		} else {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	public ResponseEntity<?> loginAdmin(Administrador adm) {
+		//Do tipo Administrador para poder retornar o Objeto
+		Administrador admExistente = administradorRepository.findByEmailandSenha(adm.getEmail(), adm.getSenha());
+		if (admExistente != null) {
+			
+			return new ResponseEntity<Administrador>(admExistente, HttpStatus.OK);
+
+		} else {
+			//Caso o admin nao exista, retornara somente um campo boolean no JSON.
+			//Nesse caso o objeto admin nao existe no banco.
+			return exceptController.errorHandlingAdmin(false, HttpStatus.NOT_FOUND);
+
 		}
 	}
 

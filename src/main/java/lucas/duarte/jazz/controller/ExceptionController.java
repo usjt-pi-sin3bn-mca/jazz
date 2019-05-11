@@ -22,5 +22,15 @@ public class ExceptionController {
 		jsonObject.put("message", message);
 		return ResponseEntity.status(status).body(jsonObject);
 	}
+	
+	public ResponseEntity<Object> errorHandlingAdmin(@Nullable Boolean message, HttpStatus status) {
+		if (message == null) {
+			message = false;;
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode jsonObject = mapper.createObjectNode();
+		jsonObject.put("admin", message);
+		return ResponseEntity.status(status).body(jsonObject);
+	}
 
 }
