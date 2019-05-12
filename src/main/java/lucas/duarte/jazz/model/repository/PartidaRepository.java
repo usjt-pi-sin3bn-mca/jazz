@@ -18,4 +18,9 @@ public interface PartidaRepository extends JpaRepository<Partida, Long> {
 	@Query(value = FIND_PARTIDA_ANDAMENTO, nativeQuery = true)
     public List<Partida> findPartidasEmAndamento();
 	
+	//Retorna as partidas anteriores
+		public static final String retornaAnteriores = "SELECT * FROM partida WHERE (partida_iniciada = true AND partida_finalizada = true)";
+		@Query(value = retornaAnteriores, nativeQuery = true)
+	    public List<Partida> getAnteriores();
+	
 }
