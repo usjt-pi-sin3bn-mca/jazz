@@ -121,4 +121,10 @@ public class PartidaController {
 
 	}
 	
+	//Get Partidas Posteriores
+		@RequestMapping(value = "/partidas/posteriores/", method = RequestMethod.GET)
+		public ResponseEntity<List<Partida>> listarPartidasPosteriores(){
+			return partidaServ.getPartidaPosteriores();
+		}
+	
 }
