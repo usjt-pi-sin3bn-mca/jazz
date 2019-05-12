@@ -28,13 +28,7 @@ public class SetService {
 		Set meuSet = setRepo.findById(id).orElse(null);
 		System.out.println(set.isSetFinalizado());
 		if (meuSet != null) {
-			if (set.getPontoA() != 0) {
-				meuSet.setPontoA(set.getPontoA());
-				setRepo.save(meuSet);
-			} else if (set.getPontoB() != 0) {
-				meuSet.setPontoB(set.getPontoB());
-				setRepo.save(meuSet);
-			} else if (set.getTempoA() != 0) {
+			if (set.getTempoA() != 0) {
 				meuSet.setTempoA(set.getTempoA());
 				setRepo.save(meuSet);
 			} else if (set.getTempoB() != 0) {
@@ -57,5 +51,23 @@ public class SetService {
 	public List<Set> getSetsOfPartida(long partidaId) {
 		return setRepo.findOneByPartida(partidaId);
 
+	}
+
+	public Set alterarPontoA(Set set, long id) {
+		Set meuSet = setRepo.findById(id).orElse(null);
+		if (set.getPontoA() != 0) {
+			meuSet.setPontoA(set.getPontoA());
+			setRepo.save(meuSet);
+	    }	
+		return meuSet;
+	}
+	
+	public Set alterarPontoB(Set set, long id) {
+		Set meuSet = setRepo.findById(id).orElse(null);
+		if (set.getPontoB() != 0) {
+			meuSet.setPontoB(set.getPontoB());
+			setRepo.save(meuSet);
+	    }	
+		return meuSet;
 	}
 }

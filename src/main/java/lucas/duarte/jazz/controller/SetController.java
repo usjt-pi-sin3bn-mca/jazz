@@ -71,5 +71,32 @@ public class SetController {
 		return exceptController.errorHandling("Set inexistente", HttpStatus.NOT_FOUND);
 
 	}
+	
+	@RequestMapping(value = "/set/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> AlterarPontuacaoA(@PathVariable("id") long id, @RequestBody Set set,
+			UriComponentsBuilder ucBuilder) {
+		Set pontuacaoAtualizada = setServ.alterarPontoA(set, id);
+
+		if (pontuacaoAtualizada != null) {
+			return responseController.responseController(pontuacaoAtualizada, HttpStatus.OK);
+		}
+
+		return exceptController.errorHandling("Não foi possivel atualizar sua pontuação", HttpStatus.NOT_FOUND);
+
+	}
+	
+	@RequestMapping(value = "/set/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> AlterarPontuacaoB(@PathVariable("id") long id, @RequestBody Set set,
+			UriComponentsBuilder ucBuilder) {
+		Set pontuacaoAtualizada = setServ.alterarPontoB(set, id);
+
+		if (pontuacaoAtualizada != null) {
+			return responseController.responseController(pontuacaoAtualizada, HttpStatus.OK);
+		}
+
+		return exceptController.errorHandling("Não foi possivel atualizar sua pontuação", HttpStatus.NOT_FOUND);
+
+	}
+
 
 }
