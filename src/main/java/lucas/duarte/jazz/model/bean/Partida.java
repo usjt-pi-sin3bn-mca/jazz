@@ -1,6 +1,8 @@
 package lucas.duarte.jazz.model.bean;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -33,15 +35,19 @@ public class Partida implements Serializable {
 	@JoinColumn(name = "campeonato_id")
 	@JsonBackReference
 	private Campeonato campeonato;
-	//Nome do time sempre sera sao judas
+	// Nome do time sempre sera sao judas
 	private String timeA;
 	private String timeB;
 	private boolean visitante;
 	private String descricao;
 	private String local;
-	// yyyy-MM-dd
+	
+	// yyyy-MM-dd HH:MM:SS
 	@Temporal(TemporalType.DATE)
 	private Date data;
+
+	@Temporal(TemporalType.TIME)
+	private Date hora;
 
 	@OneToMany(mappedBy = "partida", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonManagedReference
@@ -101,6 +107,7 @@ public class Partida implements Serializable {
 	public int getRodada() {
 		return rodada;
 	}
+
 	// Mocar Sao judas como time A
 	public void setRodada(int rodada) {
 		this.rodada = rodada;
@@ -130,13 +137,24 @@ public class Partida implements Serializable {
 		this.local = local;
 	}
 
-	public Date getData() {
-		return data;
+	public String getData() {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		return dateFormat.format(data);
 	}
 
 	public void setData(Date data) {
 		this.data = data;
 	}
+	
+	public String getHora() {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		return dateFormat.format(hora);
+	}
+	
+	public void setHora(Date hora) {
+		this.hora = hora;
+	}
+	
 
 	public int getDesafioA() {
 		return desafioA;
