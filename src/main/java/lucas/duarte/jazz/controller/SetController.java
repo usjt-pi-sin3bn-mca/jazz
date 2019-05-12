@@ -72,7 +72,7 @@ public class SetController {
 
 	}
 	
-	@RequestMapping(value = "/set/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/set/alterarPontuacaoA/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> AlterarPontuacaoA(@PathVariable("id") long id, @RequestBody long pontoA,
 			UriComponentsBuilder ucBuilder) {
 		Set pontuacaoAtualizada = setServ.alterarPontoA(pontoA, id);
@@ -85,7 +85,7 @@ public class SetController {
 
 	}
 	
-	@RequestMapping(value = "/set/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/set/alterarPontuacaoB{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> AlterarPontuacaoB(@PathVariable("id") long id, @RequestBody long pontoB,
 			UriComponentsBuilder ucBuilder) {
 		Set pontuacaoAtualizada = setServ.alterarPontoB(pontoB, id);
