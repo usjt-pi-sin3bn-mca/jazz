@@ -73,9 +73,9 @@ public class SetController {
 	}
 	
 	@RequestMapping(value = "/set/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> AlterarPontuacaoA(@PathVariable("id") long id, @RequestBody Set set,
+	public ResponseEntity<?> AlterarPontuacaoA(@PathVariable("id") long id, @RequestBody long pontoA,
 			UriComponentsBuilder ucBuilder) {
-		Set pontuacaoAtualizada = setServ.alterarPontoA(set, id);
+		Set pontuacaoAtualizada = setServ.alterarPontoA(pontoA, id);
 
 		if (pontuacaoAtualizada != null) {
 			return responseController.responseController(pontuacaoAtualizada, HttpStatus.OK);
@@ -86,9 +86,9 @@ public class SetController {
 	}
 	
 	@RequestMapping(value = "/set/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> AlterarPontuacaoB(@PathVariable("id") long id, @RequestBody Set set,
+	public ResponseEntity<?> AlterarPontuacaoB(@PathVariable("id") long id, @RequestBody long pontoB,
 			UriComponentsBuilder ucBuilder) {
-		Set pontuacaoAtualizada = setServ.alterarPontoB(set, id);
+		Set pontuacaoAtualizada = setServ.alterarPontoB(pontoB, id);
 
 		if (pontuacaoAtualizada != null) {
 			return responseController.responseController(pontuacaoAtualizada, HttpStatus.OK);

@@ -12,6 +12,8 @@ import lucas.duarte.jazz.model.repository.SetRepository;
 public class SetService {
 	@Autowired
 	private SetRepository setRepo;
+	@Autowired
+	private Set setServ;
 
 	public boolean salvarSet(Set set) {
 		List<Set> listaSets = setRepo.findOneByPartida(set.getPartida().getId());
@@ -53,19 +55,19 @@ public class SetService {
 
 	}
 
-	public Set alterarPontoA(Set set, long id) {
+	public Set alterarPontoA(long pontoA, long id) {
 		Set meuSet = setRepo.findById(id).orElse(null);
-		if (set.getPontoA() != 0) {
-			meuSet.setPontoA(set.getPontoA());
+		if (setServ.getPontoA() != 0) {
+			meuSet.setPontoA(pontoA);
 			setRepo.save(meuSet);
 	    }	
 		return meuSet;
 	}
 	
-	public Set alterarPontoB(Set set, long id) {
+	public Set alterarPontoB(long pontoB, long id) {
 		Set meuSet = setRepo.findById(id).orElse(null);
-		if (set.getPontoB() != 0) {
-			meuSet.setPontoB(set.getPontoB());
+		if (setServ.getPontoB() != 0) {
+			meuSet.setPontoB(pontoB);
 			setRepo.save(meuSet);
 	    }	
 		return meuSet;
