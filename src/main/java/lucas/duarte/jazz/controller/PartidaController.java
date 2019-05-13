@@ -121,4 +121,33 @@ public class PartidaController {
 
 	}
 	
-}
+	
+		// Retorna as Partidas Anteriores
+		@RequestMapping(value = "/partidasAnteriores/", method = RequestMethod.GET)
+		public ResponseEntity<?> listaPartidasAnteriores() {
+			List<Partida> partidasAnteriores = partidaServ.getPartidasAnteriores();
+
+			if (partidasAnteriores.isEmpty()) {
+				return exceptController.errorHandling("Nao existem partidas anteriores", HttpStatus.NOT_FOUND);
+			}
+			ObjectMapper mapper = new ObjectMapper();
+			ArrayNode partidas = mapper.createArrayNode();
+
+			for (Partida p : partidasAnteriores) {
+
+				ObjectNode objectNode1 = mapper.createObjectNode();
+				objectNode1.put("id", p.getId());
+				objectNode1.put("timeA", p.getTimeA());
+				objectNode1.put("timeB", p.getTimeB());
+				objectNode1.put("data", p.getData().toString());
+				objectNode1.put("ganhador", p.getGanhadorPartida());
+
+				partidas.add(objectNode1);
+			}
+
+			return responseController.responseController(partidas, HttpStatus.OK);
+		}
+
+	}
+	
+

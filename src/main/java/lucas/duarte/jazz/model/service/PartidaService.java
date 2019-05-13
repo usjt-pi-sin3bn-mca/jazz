@@ -54,7 +54,7 @@ public class PartidaService {
 		}
 
 	}
-	
+
 	public boolean finalizarPartida(Long id) {
 		// Partida antes da alteracao
 		Partida partidaOld = partidaRepo.findById(id).orElse(null);
@@ -72,4 +72,11 @@ public class PartidaService {
 		}
 
 	}
+
+	// Retorna as partidas anteriores
+	public List<Partida> getPartidasAnteriores() {
+
+		return partidaRepo.getAnteriores();
+	}
+
 }
