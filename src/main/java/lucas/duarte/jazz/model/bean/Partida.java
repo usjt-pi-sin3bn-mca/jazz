@@ -33,7 +33,7 @@ public class Partida implements Serializable {
 	@JoinColumn(name = "campeonato_id")
 	@JsonBackReference
 	private Campeonato campeonato;
-	//Nome do time sempre sera sao judas
+	// Nome do time sempre sera sao judas
 	private String timeA;
 	private String timeB;
 	private boolean visitante;
@@ -53,6 +53,8 @@ public class Partida implements Serializable {
 	private String ganhadorPartida;
 	private boolean partidaIniciada;
 	private boolean partidaFinalizada;
+	private int totalSetsTimeA;
+	private int totalSetsTimeB;
 
 	public Partida() {
 		this.timeA = "Sao Judas";
@@ -101,6 +103,7 @@ public class Partida implements Serializable {
 	public int getRodada() {
 		return rodada;
 	}
+
 	// Mocar Sao judas como time A
 	public void setRodada(int rodada) {
 		this.rodada = rodada;
@@ -184,6 +187,33 @@ public class Partida implements Serializable {
 
 	public void setPartidaFinalizada(boolean partidaFinalizada) {
 		this.partidaFinalizada = partidaFinalizada;
+	}
+
+	public int getTotalSetsTimeA() {
+		setTotalSets();
+		return this.totalSetsTimeA;
+	}
+
+	public int getTotalSetsTimeB() {
+		setTotalSets();
+		return this.totalSetsTimeB;
+	}
+
+	private void setTotalSets() {
+		this.totalSetsTimeA = 0;
+		this.totalSetsTimeB = 0;
+		
+		List<Set> sets = this.getSets();
+		if (sets != null) {
+			for (Set set : sets) {
+				if (set.isSetFinalizado()) {
+					if (set.getGanhador().equals(this.timeA))
+						this.totalSetsTimeA++;
+					else
+						this.totalSetsTimeB++;
+				}
+			}
+		}
 	}
 
 }

@@ -62,14 +62,17 @@ public class SetController {
 	@RequestMapping(value = "/set/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateSet(@PathVariable("id") long id, @RequestBody Set set,
 			UriComponentsBuilder ucBuilder) {
-		Set setAtualizado = setServ.updateSet(set, id);
+		try {
+			boolean success = setServ.updateSet(set, id);
 
-		if (setAtualizado != null) {
-			return responseController.responseController(setAtualizado, HttpStatus.OK);
+			if (success)
+				return responseController.responseController(null, HttpStatus.NO_CONTENT);
+			else
+				return responseController.responseController("Set não encontrado!", HttpStatus.NOT_FOUND);
+
+		} catch (Exception e) {
+			return exceptController.errorHandling(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		return exceptController.errorHandling("Set inexistente", HttpStatus.NOT_FOUND);
-
 	}
 
 }
