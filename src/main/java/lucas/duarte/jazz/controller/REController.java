@@ -10,5 +10,5 @@ public class REController {
 	public ResponseEntity<?> responseController(Object obj, HttpStatus statusCode) {
 		return ResponseEntity.status(statusCode).body(obj);
 	}
-
+	
 }
