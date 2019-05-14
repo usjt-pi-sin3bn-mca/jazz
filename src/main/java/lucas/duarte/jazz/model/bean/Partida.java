@@ -39,6 +39,7 @@ public class Partida implements Serializable {
 	private boolean visitante;
 	private String descricao;
 	private String local;
+	
 	// yyyy-MM-dd
 	@Temporal(TemporalType.DATE)
 	private Date data;
