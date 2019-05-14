@@ -16,8 +16,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", resolver = EntityIdResolver.class, scope = Long.class)
@@ -31,7 +33,10 @@ public class Partida implements Serializable {
 	// Campeonato ID vai se o nome da coluna na tabela
 	@ManyToOne
 	@JoinColumn(name = "campeonato_id")
-	@JsonBackReference
+	// @JsonBackReference
+
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "nome")
+	@JsonIdentityReference(alwaysAsId = true)
 	private Campeonato campeonato;
 	// Nome do time sempre sera sao judas
 	private String timeA;
@@ -202,7 +207,7 @@ public class Partida implements Serializable {
 	private void setTotalSets() {
 		this.totalSetsTimeA = 0;
 		this.totalSetsTimeB = 0;
-		
+
 		List<Set> sets = this.getSets();
 		if (sets != null) {
 			for (Set set : sets) {
