@@ -16,7 +16,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import lucas.duarte.jazz.model.bean.Campeonato;
 import lucas.duarte.jazz.model.bean.Partida;
+import lucas.duarte.jazz.model.service.CampeonatoService;
 import lucas.duarte.jazz.model.service.PartidaService;
 
 @RestController
@@ -28,6 +30,8 @@ public class PartidaController {
 	private ExceptionController exceptController;
 	@Autowired
 	private REController responseController;
+	@Autowired
+	private CampeonatoService campeonatoService;
 
 	@RequestMapping(value = "/partidas/", method = RequestMethod.GET)
 	public ResponseEntity<?> listAllpartidas() {
@@ -42,11 +46,20 @@ public class PartidaController {
 
 	@RequestMapping(value = "/partidas/", method = RequestMethod.POST)
 	public ResponseEntity<?> createPartida(@RequestBody Partida partida, UriComponentsBuilder ucBuilder) {
-		if (partidaServ.cadastrarPartida(partida)) {
-			return responseController.responseController(partida, HttpStatus.OK);
-			// return new ResponseEntity<Partida>(partida, HttpStatus.CREATED);
+		List<Campeonato> campeonatos = campeonatoService.getAllCampeonatosNameId();
+
+		if (!campeonatos.isEmpty()) {
+
+			if (partidaServ.cadastrarPartida(partida)) {
+				return responseController.responseController(partida, HttpStatus.OK);
+				// return new ResponseEntity<Partida>(partida, HttpStatus.CREATED);
+			} else {
+				return exceptController.errorHandling("Erro no cadastro de partidas", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
 		} else {
-			return exceptController.errorHandling("Erro no cadastro de partidas", HttpStatus.INTERNAL_SERVER_ERROR);
+			return exceptController.errorHandling("Erro, não existe campeonato cadastrado",
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -95,14 +108,14 @@ public class PartidaController {
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode objectNode1 = mapper.createObjectNode();
-		
+
 		objectNode1.put("id", id);
 		objectNode1.put("iniciada", p);
-		
+
 		return responseController.responseController(objectNode1, HttpStatus.OK);
 
 	}
-	
+
 	@RequestMapping(value = "/partidas/finalizar/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> finalizarPartida(@PathVariable("id") long id) {
 
@@ -113,41 +126,38 @@ public class PartidaController {
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode objectNode1 = mapper.createObjectNode();
-		
+
 		objectNode1.put("id", id);
 		objectNode1.put("finalizada", p);
-		
+
 		return responseController.responseController(objectNode1, HttpStatus.OK);
 
 	}
-	
-	
-		// Retorna as Partidas Anteriores
-		@RequestMapping(value = "/partidasAnteriores/", method = RequestMethod.GET)
-		public ResponseEntity<?> listaPartidasAnteriores() {
-			List<Partida> partidasAnteriores = partidaServ.getPartidasAnteriores();
 
-			if (partidasAnteriores.isEmpty()) {
-				return exceptController.errorHandling("Nao existem partidas anteriores", HttpStatus.NOT_FOUND);
-			}
-			ObjectMapper mapper = new ObjectMapper();
-			ArrayNode partidas = mapper.createArrayNode();
+	// Retorna as Partidas Anteriores
+	@RequestMapping(value = "/partidasAnteriores/", method = RequestMethod.GET)
+	public ResponseEntity<?> listaPartidasAnteriores() {
+		List<Partida> partidasAnteriores = partidaServ.getPartidasAnteriores();
 
-			for (Partida p : partidasAnteriores) {
+		if (partidasAnteriores.isEmpty()) {
+			return exceptController.errorHandling("Nao existem partidas anteriores", HttpStatus.NOT_FOUND);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode partidas = mapper.createArrayNode();
 
-				ObjectNode objectNode1 = mapper.createObjectNode();
-				objectNode1.put("id", p.getId());
-				objectNode1.put("timeA", p.getTimeA());
-				objectNode1.put("timeB", p.getTimeB());
-				objectNode1.put("data", p.getData().toString());
-				objectNode1.put("ganhador", p.getGanhadorPartida());
+		for (Partida p : partidasAnteriores) {
 
-				partidas.add(objectNode1);
-			}
+			ObjectNode objectNode1 = mapper.createObjectNode();
+			objectNode1.put("id", p.getId());
+			objectNode1.put("timeA", p.getTimeA());
+			objectNode1.put("timeB", p.getTimeB());
+			objectNode1.put("data", p.getData().toString());
+			objectNode1.put("ganhador", p.getGanhadorPartida());
 
-			return responseController.responseController(partidas, HttpStatus.OK);
+			partidas.add(objectNode1);
 		}
 
+		return responseController.responseController(partidas, HttpStatus.OK);
 	}
-	
 
+}
