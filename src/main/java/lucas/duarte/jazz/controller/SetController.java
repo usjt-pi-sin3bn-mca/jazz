@@ -75,4 +75,17 @@ public class SetController {
 		}
 	}
 
+	@RequestMapping(value = "/updateSet/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> addTempo(@PathVariable("id") long id, @RequestBody Set set,
+			UriComponentsBuilder ucBuilder) {
+
+		boolean success = setServ.addTempo(set, id);
+
+		if (success) {
+			return responseController.responseController(null, HttpStatus.OK);
+		} else {
+			return responseController.responseController("Não foi possível adicionar o tempo.", HttpStatus.NOT_FOUND);
+		}
+
+	}
 }

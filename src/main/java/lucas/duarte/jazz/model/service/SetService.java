@@ -3,8 +3,11 @@ package lucas.duarte.jazz.model.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import lucas.duarte.jazz.model.bean.Administrador;
 import lucas.duarte.jazz.model.bean.Partida;
 import lucas.duarte.jazz.model.bean.Set;
 import lucas.duarte.jazz.model.repository.SetRepository;
@@ -27,14 +30,14 @@ public class SetService {
 
 	public boolean updateSet(Set setAtualizado, long id) {
 		System.out.println(setAtualizado);
-		
+
 		Set meuSet = setRepo.findById(id).orElse(null);
-		
+
 		if (meuSet != null) {
 			setAtualizado.setId(id);
 			Partida partida = meuSet.getPartida();
 			setAtualizado.setPartida(partida);
-			
+
 			if (setAtualizado.isSetFinalizado()) {
 				if (setAtualizado.getPontoA() > setAtualizado.getPontoB())
 					setAtualizado.setGanhador(partida.getTimeA());
@@ -48,9 +51,24 @@ public class SetService {
 
 		return false;
 	}
-	
+
 	public List<Set> getSetsOfPartida(long partidaId) {
 		return setRepo.findOneByPartida(partidaId);
+	}
+
+	public boolean addTempo(Set set, long id) {
+		Set setUpdate = setRepo.findById(id).orElse(null);
+		if (setUpdate != null) {
+			if (set.getPontoA() != 0 && set.getPontoA() <= 2) {
+				setUpdate.setTempoA(set.getTempoA());
+			} 
+			if (set.getPontoB() != 0 && set.getPontoB() <= 2) {
+				setUpdate.setTempoB(set.getTempoB());
+			}
+			setRepo.save(setUpdate);
+			return true;
+		}
+		return false;
 	}
 
 }
