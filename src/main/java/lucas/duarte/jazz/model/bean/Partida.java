@@ -1,6 +1,8 @@
 package lucas.duarte.jazz.model.bean;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -39,10 +41,13 @@ public class Partida implements Serializable {
 	private boolean visitante;
 	private String descricao;
 	private String local;
-	
-	// yyyy-MM-dd
+
+	// yyyy-MM-dd HH:MM:SS
 	@Temporal(TemporalType.DATE)
 	private Date data;
+
+	@Temporal(TemporalType.TIME)
+	private Date hora;
 
 	@OneToMany(mappedBy = "partida", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonManagedReference
@@ -134,12 +139,22 @@ public class Partida implements Serializable {
 		this.local = local;
 	}
 
-	public Date getData() {
-		return data;
+	public String getData() {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		return dateFormat.format(data);
 	}
 
 	public void setData(Date data) {
 		this.data = data;
+	}
+
+	public String getHora() {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		return dateFormat.format(hora);
+	}
+
+	public void setHora(Date hora) {
+		this.hora = hora;
 	}
 
 	public int getDesafioA() {
@@ -203,7 +218,7 @@ public class Partida implements Serializable {
 	private void setTotalSets() {
 		this.totalSetsTimeA = 0;
 		this.totalSetsTimeB = 0;
-		
+
 		List<Set> sets = this.getSets();
 		if (sets != null) {
 			for (Set set : sets) {
