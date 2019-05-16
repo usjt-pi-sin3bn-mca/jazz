@@ -59,10 +59,10 @@ public class SetService {
 	public boolean addTempo(Set set, long id) {
 		Set setUpdate = setRepo.findById(id).orElse(null);
 		if (setUpdate != null) {
-			if (set.getPontoA() != 0 && set.getPontoA() <= 2) {
+			if (set.getTempoA() != 0 && set.getTempoA() <= 2) {
 				setUpdate.setTempoA(set.getTempoA());
 			} 
-			if (set.getPontoB() != 0 && set.getPontoB() <= 2) {
+			if (set.getTempoB() != 0 && set.getTempoB() <= 2) {
 				setUpdate.setTempoB(set.getTempoB());
 			}
 			setRepo.save(setUpdate);
