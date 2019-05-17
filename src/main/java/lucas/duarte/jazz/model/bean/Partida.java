@@ -41,12 +41,12 @@ public class Partida implements Serializable {
 	private boolean visitante;
 	private String descricao;
 	private String local;
-	// yyyy-MM-dd HH:MM:SS
+	// yyyy-MM-dd
 	@Temporal(TemporalType.DATE)
 	private Date data;
 
-	@Temporal(TemporalType.TIME)
-	private Date hora;
+//	@Temporal(TemporalType.TIME)
+//	private Date hora;
 
 	@OneToMany(mappedBy = "partida", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonManagedReference
@@ -147,14 +147,14 @@ public class Partida implements Serializable {
 		this.data = data;
 	}
 
-	public String getHora() {
-		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-		return dateFormat.format(hora);
-	}
-
-	public void setHora(Date hora) {
-		this.hora = hora;
-	}
+//	public String getHora() {
+//		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+//		return dateFormat.format(hora);
+//	}
+//
+//	public void setHora(Date hora) {
+//		this.hora = hora;
+//	}
 
 	public int getDesafioA() {
 		return desafioA;

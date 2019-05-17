@@ -58,19 +58,18 @@ public class PartidaService {
 	public boolean finalizarPartida(Long id) {
 		// Partida antes da alteracao
 		Partida partidaOld = partidaRepo.findById(id).orElse(null);
-		if (partidaOld != null) {
-			if (partidaOld.isPartidaFinalizada()) {
-				return false;
-			} else {
-				partidaOld.setPartidaFinalizada(true);
-				partidaRepo.save(partidaOld);
-				return true;
+		if (partidaOld.isPartidaIniciada()) {
+			if (partidaOld != null) {
+				if (partidaOld.isPartidaFinalizada()) {
+					return false;
+				} else {
+					partidaOld.setPartidaFinalizada(true);
+					partidaRepo.save(partidaOld);
+					return true;
+				}
 			}
-		} else {
-			System.out.println("Partida nao existente");
-			return false;
 		}
-
+		throw new RuntimeException("Partida nao iniciada");
 	}
 
 	// Retorna as partidas anteriores

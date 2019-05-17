@@ -105,19 +105,23 @@ public class PartidaController {
 	
 	@RequestMapping(value = "/partidas/finalizar/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> finalizarPartida(@PathVariable("id") long id) {
+		
+		try {
+			boolean p = partidaServ.finalizarPartida(id);
 
-		boolean p = partidaServ.finalizarPartida(id);
-
-		if (!p) {
-			return exceptController.errorHandling("Partida ja finalizada ou inexistente", HttpStatus.BAD_REQUEST);
+			if (!p) {
+				return exceptController.errorHandling("Partida ja finalizada", HttpStatus.OK);
+			}
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode objectNode1 = mapper.createObjectNode();
+			
+			objectNode1.put("id", id);
+			objectNode1.put("finalizada", p);
+			
+			return responseController.responseController(objectNode1, HttpStatus.OK);
+		}catch (RuntimeException e) {
+			return exceptController.errorHandling("Partida nao iniciada", HttpStatus.BAD_REQUEST);
 		}
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode objectNode1 = mapper.createObjectNode();
-		
-		objectNode1.put("id", id);
-		objectNode1.put("finalizada", p);
-		
-		return responseController.responseController(objectNode1, HttpStatus.OK);
 
 	}
 	
