@@ -77,5 +77,11 @@ public class PartidaService {
 
 		return partidaRepo.getAnteriores();
 	}
+	
+	// Retorna as partidas posteriores
+		public List<Partida> getPartidasPosteriores() {
+
+			return partidaRepo.getPosteriores();
+		}
 
 }

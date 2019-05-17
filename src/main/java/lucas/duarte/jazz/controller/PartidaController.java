@@ -151,6 +151,32 @@ public class PartidaController {
 
 			return responseController.responseController(partidas, HttpStatus.OK);
 		}
+		
+		// Retorna as Partidas Posteriores
+				@RequestMapping(value = "/partidasPosteriores/", method = RequestMethod.GET)
+				public ResponseEntity<?> listaPartidasPosteriores() {
+					List<Partida> partidasPosteriores = partidaServ.getPartidasPosteriores();
+
+					if (partidasPosteriores.isEmpty()) {
+						return exceptController.errorHandling("Nao existem partidas posteriores", HttpStatus.NOT_FOUND);
+					}
+					ObjectMapper mapper = new ObjectMapper();
+					ArrayNode partidas = mapper.createArrayNode();
+
+					for (Partida p : partidasPosteriores) {
+
+						ObjectNode objectNode1 = mapper.createObjectNode();
+						objectNode1.put("id", p.getId());
+						objectNode1.put("timeA", p.getTimeA());
+						objectNode1.put("timeB", p.getTimeB());
+						objectNode1.put("data", p.getData().toString());
+						objectNode1.put("ganhador", p.getGanhadorPartida());
+
+						partidas.add(objectNode1);
+					}
+
+					return responseController.responseController(partidas, HttpStatus.OK);
+				}
 
 	}
 	
