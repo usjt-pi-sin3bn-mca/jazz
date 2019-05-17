@@ -11,8 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 public class Campeonato implements Serializable {
@@ -24,10 +26,14 @@ public class Campeonato implements Serializable {
 	@JsonProperty("nome")
 	private String nome;
 	// Mapped by e o nome do atribudo da outra classe
-	@JsonManagedReference
+	//@JsonManagedReference
 	@OneToMany(mappedBy = "campeonato", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonProperty("partidas")
 	private List<Partida> partidas;
+	
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "nome")
+	@JsonIdentityReference(alwaysAsId = true)
+
 
 	public int getId() {
 		return id;
