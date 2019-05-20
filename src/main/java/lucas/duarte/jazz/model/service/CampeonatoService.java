@@ -8,12 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lucas.duarte.jazz.model.bean.Campeonato;
+import lucas.duarte.jazz.model.bean.Partida;
 import lucas.duarte.jazz.model.repository.CampeonatoRepository;
 
 @Service
 public class CampeonatoService {
 	@Autowired
 	private CampeonatoRepository campeonatoRepo;
+
+	@Autowired
+	private PartidaService partidaService;
 
 	public ResponseEntity<Campeonato> salvarCampeonato(Campeonato camp) {
 		try {
@@ -32,13 +36,23 @@ public class CampeonatoService {
 		if (campeonatos.isEmpty()) {
 			// Return 404 beacause was not found
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}else {
+		} else {
 			return new ResponseEntity<List<Campeonato>>(campeonatos, HttpStatus.OK);
 		}
 
 	}
-	
+
 	public List<Campeonato> getAllCampeonatosNameId() {
 		return campeonatoRepo.findAllByNameAndId();
+	}
+
+	public void processaEntidade(Campeonato campeonato) {
+		List<Partida> partidas = campeonato.getPartidas();
+		campeonato.setPartidas(null);
+		campeonato = campeonatoRepo.save(campeonato);
+		for (Partida partida : partidas) {
+			partida.setCampeonato(campeonato);
+			partidaService.cadastrarPartida(partida);
+		}
 	}
 }

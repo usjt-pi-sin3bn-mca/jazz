@@ -50,7 +50,7 @@ public class CampeonatoController {
 			ObjectNode objectNode1 = mapper.createObjectNode();
 			objectNode1.put("id", c.getId());
 			objectNode1.put("nome", c.getNome());
-			
+
 			campeonatos.add(objectNode1);
 		}
 		return responseController.responseController(campeonatos, HttpStatus.OK);
@@ -59,9 +59,8 @@ public class CampeonatoController {
 	// Create Partida
 	@RequestMapping(value = "/campeonato/", method = RequestMethod.POST)
 	public ResponseEntity<?> createCampeonato(@RequestBody Campeonato camp, UriComponentsBuilder ucBuilder) {
-		// Apenas retorna a trataviva do service
-		System.out.println("Vou cadastrar um campeonato");
-		return campeonatoServ.salvarCampeonato(camp);
+		campeonatoServ.processaEntidade(camp);
+		return null;
 
 	}
 
