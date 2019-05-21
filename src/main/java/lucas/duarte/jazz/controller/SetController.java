@@ -68,7 +68,7 @@ public class SetController {
 			if (success)
 				return responseController.responseController(null, HttpStatus.NO_CONTENT);
 			else
-				return responseController.responseController("Set não encontrado!", HttpStatus.NOT_FOUND);
+				return responseController.responseController("Set não alterado!", HttpStatus.NOT_FOUND);
 
 		} catch (Exception e) {
 			return exceptController.errorHandling(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

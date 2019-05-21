@@ -27,14 +27,16 @@ public class SetService {
 
 	public boolean updateSet(Set setAtualizado, long id) {
 		System.out.println(setAtualizado);
-		
+
 		Set meuSet = setRepo.findById(id).orElse(null);
-		
+
+		boolean tempo = false;
+
 		if (meuSet != null) {
 			setAtualizado.setId(id);
 			Partida partida = meuSet.getPartida();
 			setAtualizado.setPartida(partida);
-			
+
 			if (setAtualizado.isSetFinalizado()) {
 				if (setAtualizado.getPontoA() > setAtualizado.getPontoB())
 					setAtualizado.setGanhador(partida.getTimeA());
@@ -42,13 +44,25 @@ public class SetService {
 					setAtualizado.setGanhador(partida.getTimeB());
 			}
 
-			setRepo.save(setAtualizado);
-			return true;
+			if (setAtualizado.getTempoA() >= 0 && setAtualizado.getTempoA() <= 2 && setAtualizado.getTempoB() >= 0
+					&& setAtualizado.getTempoB() <= 2) {
+				tempo = true;
+			}
+
+			if (tempo) 
+			{
+				setRepo.save(setAtualizado);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		return false;
 	}
-	
+
 	public List<Set> getSetsOfPartida(long partidaId) {
 		return setRepo.findOneByPartida(partidaId);
 	}
