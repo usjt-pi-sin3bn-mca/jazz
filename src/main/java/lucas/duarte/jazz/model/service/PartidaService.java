@@ -6,16 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lucas.duarte.jazz.model.bean.Partida;
+import lucas.duarte.jazz.model.bean.Set;
 import lucas.duarte.jazz.model.repository.PartidaRepository;
 
 @Service
 public class PartidaService {
 	@Autowired
 	private PartidaRepository partidaRepo;
+	@Autowired
+	private SetService setService;
 
-	public boolean cadastrarPartida(Partida partida) {
+	public boolean cadastrarPartida(Partida partida, Set set) {
 		try {
 			partidaRepo.save(partida);
+			setService.salvarSet(set);
 			return true;
 		} catch (Exception e) {
 			System.out.println(e);
