@@ -187,11 +187,18 @@ public class Partida implements Serializable {
 	}
 
 	public String getGanhadorPartida() {
-		return ganhadorPartida;
+		setGanhadorPartida();
+		return this.ganhadorPartida;
 	}
 
-	public void setGanhadorPartida(String ganhadorPartida) {
-		this.ganhadorPartida = ganhadorPartida;
+	public void setGanhadorPartida() {
+		if (this.partidaFinalizada) {
+			if (this.totalSetsTimeA > this.totalSetsTimeB)
+				this.ganhadorPartida = this.timeA;
+			else
+				this.ganhadorPartida = this.timeB;
+		} else
+			this.ganhadorPartida = "";
 	}
 
 	public boolean isPartidaIniciada() {
