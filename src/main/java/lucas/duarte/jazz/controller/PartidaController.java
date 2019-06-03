@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lucas.duarte.jazz.model.bean.Partida;
 import lucas.duarte.jazz.model.bean.Set;
+import lucas.duarte.jazz.model.service.CampeonatoService;
 import lucas.duarte.jazz.model.service.PartidaService;
 
 @RestController
@@ -25,6 +26,8 @@ import lucas.duarte.jazz.model.service.PartidaService;
 public class PartidaController {
 	@Autowired
 	private PartidaService partidaServ;
+	@Autowired
+	private CampeonatoService campeonatoServ;
 	@Autowired
 	private ExceptionController exceptController;
 	@Autowired
@@ -45,6 +48,12 @@ public class PartidaController {
 	public ResponseEntity<?> createPartida(@RequestBody Partida partida, UriComponentsBuilder ucBuilder) {
 		Set setPartida = new Set();
 		setPartida.setPartida(partida);
+		
+		ResponseEntity<?> campeonato = campeonatoServ.getAllCampeonatos();
+
+		if (campeonato.getBody() == null) {
+			return exceptController.errorHandling("Nao existem campeonato cadastrado", HttpStatus.NOT_FOUND);
+		}
 		
 		boolean cadastroPartida = partidaServ.cadastrarPartida(partida, setPartida);
 		if (cadastroPartida) {
