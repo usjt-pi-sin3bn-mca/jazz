@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lucas.duarte.jazz.model.bean.Partida;
+import lucas.duarte.jazz.model.bean.Set;
 import lucas.duarte.jazz.model.service.PartidaService;
 
 @RestController
@@ -42,7 +43,11 @@ public class PartidaController {
 
 	@RequestMapping(value = "/partidas/", method = RequestMethod.POST)
 	public ResponseEntity<?> createPartida(@RequestBody Partida partida, UriComponentsBuilder ucBuilder) {
-		if (partidaServ.cadastrarPartida(partida)) {
+		Set setPartida = new Set();
+		setPartida.setPartida(partida);
+		
+		boolean cadastroPartida = partidaServ.cadastrarPartida(partida, setPartida);
+		if (cadastroPartida) {
 			return responseController.responseController(partida, HttpStatus.OK);
 			// return new ResponseEntity<Partida>(partida, HttpStatus.CREATED);
 		} else {
