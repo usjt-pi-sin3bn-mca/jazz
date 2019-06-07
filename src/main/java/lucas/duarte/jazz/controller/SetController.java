@@ -66,7 +66,7 @@ public class SetController {
 			boolean success = setServ.updateSet(set, id);
 
 			if (success)
-				return responseController.responseController(null, HttpStatus.NO_CONTENT);
+				return responseController.responseController(set, HttpStatus.OK);
 			else
 				return responseController.responseController("Set não alterado!", HttpStatus.NOT_FOUND);
 
