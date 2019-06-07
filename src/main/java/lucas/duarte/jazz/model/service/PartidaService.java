@@ -42,7 +42,11 @@ public class PartidaService {
 	}
 
 	public boolean iniciarPartida(Long id) {
-		// Partida antes da alteracao
+		//Validar para verificar se ja existe alguma partida iniciada
+		List<Partida> partidasAndamento = partidaRepo.findPartidasEmAndamento();
+		if (!partidasAndamento.isEmpty()) {
+			return false;
+		}
 		Partida partidaOld = partidaRepo.findById(id).orElse(null);
 		if (partidaOld != null) {
 			if (partidaOld.isPartidaIniciada()) {

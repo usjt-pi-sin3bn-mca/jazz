@@ -82,21 +82,7 @@ public class PartidaController {
 			return exceptController.errorHandling("Nao existem partidas em andamento", HttpStatus.NOT_FOUND);
 		}
 
-		ObjectMapper mapper = new ObjectMapper();
-		ArrayNode partidas = mapper.createArrayNode();
-
-		for (Partida p : partidasAndamento) {
-
-			ObjectNode objectNode1 = mapper.createObjectNode();
-			objectNode1.put("id", p.getId());
-			objectNode1.put("timeA", p.getTimeA());
-			objectNode1.put("timeB", p.getTimeB());
-			objectNode1.put("descricao", p.getDescricao());
-
-			partidas.add(objectNode1);
-		}
-
-		return responseController.responseController(partidas, HttpStatus.OK);
+		return responseController.responseController(partidasAndamento, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/partidas/iniciar/{id}", method = RequestMethod.PUT)

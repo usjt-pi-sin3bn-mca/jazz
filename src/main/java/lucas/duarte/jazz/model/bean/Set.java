@@ -38,6 +38,8 @@ public class Set implements Serializable {
 	private String ganhador;
 	@Column(name = "set_finalizado")
 	private boolean setFinalizado;
+	@Column(name = "saque")
+	private String saque;
 	
 	@ManyToOne
 	@JoinColumn(name = "partida_id")
@@ -108,7 +110,15 @@ public class Set implements Serializable {
 	public void setPartida(Partida partida) {
 		this.partida = partida;
 	}
+	
+	public String getSaque() {
+		return saque;
+	}
 
+	public void setSaque(String saque) {
+		this.saque = saque;
+	}
+	
 	public String toString() {
 		return "Set [id=" + id + ", pontoA=" + pontoA + ", pontoB=" + pontoB + ", tempoA=" + tempoA + ", tempoB="
 				+ tempoB + ", ganhador=" + ganhador + ", setFinalizado=" + setFinalizado + ", partida=" + partida + "]";
