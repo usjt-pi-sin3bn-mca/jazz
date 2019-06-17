@@ -1,9 +1,8 @@
 package lucas.duarte.jazz.model.bean;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,13 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", resolver = EntityIdResolver.class, scope = Long.class)
@@ -35,10 +31,7 @@ public class Partida implements Serializable {
 	// Campeonato ID vai se o nome da coluna na tabela
 	@ManyToOne
 	@JoinColumn(name = "campeonato_id")
-	// @JsonBackReference
-
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "nome")
-	@JsonIdentityReference(alwaysAsId = true)
+	@JsonBackReference
 	private Campeonato campeonato;
 	// Nome do time sempre sera sao judas
 	private String timeA;
@@ -46,13 +39,10 @@ public class Partida implements Serializable {
 	private boolean visitante;
 	private String descricao;
 	private String local;
-
-	// yyyy-MM-dd HH:MM:SS
-	@Temporal(TemporalType.DATE)
-	private Date data;
-
-//	@Temporal(TemporalType.TIME)
-//	private Date hora;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private LocalDate data;
+	@JsonFormat(pattern = "HH:mm")
+	private LocalTime hora;
 
 	@OneToMany(mappedBy = "partida", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonManagedReference
@@ -144,23 +134,21 @@ public class Partida implements Serializable {
 		this.local = local;
 	}
 
-	public String getData() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		return dateFormat.format(data);
+	public LocalDate getData() {
+		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 
-//	public String getHora() {
-//		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-//		return dateFormat.format(hora);
-//	}
-//
-//	public void setHora(Date hora) {
-//		this.hora = hora;
-//	}
+	public LocalTime getHora() {
+		return hora;
+	}
+
+	public void setHora(LocalTime hora) {
+		this.hora = hora;
+	}
 
 	public int getDesafioA() {
 		return desafioA;
